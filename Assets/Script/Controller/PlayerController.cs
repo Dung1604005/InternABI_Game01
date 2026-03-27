@@ -1,0 +1,256 @@
+using System.Security.Cryptography;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    [Header("CheckGround Condition")]
+
+    [SerializeField] private LayerMask layerGround;
+
+    [SerializeField] private float distanceCheckGround;
+
+    [Header("Reference")]
+
+    [SerializeField] private Animator animator;
+
+    [SerializeField] private Rigidbody2D rb;
+
+    [Header("Stat Player")]
+
+    [SerializeField] private float speedMove;
+
+    [SerializeField] private float jumpForce;
+
+
+
+    private bool isGround;
+
+    private bool isJumping;
+
+    // a flag to check whether if player have input to jump or not
+
+    private bool jumpRequested = false;
+
+    private bool isAttack;
+
+    private float horizontalInput;
+
+    private string currentAnimName;
+
+    
+
+    
+    void Start()
+    {
+
+    }
+
+    //Handle physics logic inside FixedUpdate to sync with Unity's physics system
+    void FixedUpdate()
+    {
+        //Check if whether the player is on the ground
+        isGround = CheckGrounded();
+
+        //Move
+        OnMove();
+        //Jump
+        OnJump();
+        
+
+        
+
+    }
+
+    void Update()
+    {
+        // value is in range -1 to 1
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+
+        // If player click Space and the player is on the ground
+        // => Send signal for FixedUpdate handle logic jump
+        if(Input.GetKeyDown(KeyCode.Space) && isGround)
+        {
+            jumpRequested = true;
+        }
+        
+        // Attack
+        if(Input.GetKeyDown(KeyCode.Mouse0) && isGround)
+        {
+            Attack();
+        }
+
+        if(Input.GetKeyDown(KeyCode.C) && isGround)
+        {
+            Throw();
+        }
+
+        Debug.Log(isAttack);
+
+        
+    }
+    /// <summary>
+    /// Handle the logic Jump and fall
+    /// </summary>
+
+    private void OnJump()
+    {
+        // Stop moving while jump
+        if (isAttack)
+        {
+            return;
+        }
+        
+        //If player is on the ground
+        //=> Player no longer in the air 
+        if (isGround)
+        {
+            isJumping = false;
+        }
+        // Check the condition if the player is in the Air and have velocity.y negative
+        // => Set Player fall
+        if(!isGround && rb.linearVelocity.y < -0.1f && isJumping)
+        {
+            ChangeAnim("fall");
+        }
+        // Apply jump force only if a jump was requested and the player is on the ground
+        if (jumpRequested)
+        {
+            ChangeAnim("jump");
+            rb.AddForce(jumpForce*Vector2.up, ForceMode2D.Impulse);
+            isJumping = true;
+
+            // Stop jump signal so that next frame player dont jump
+            jumpRequested = false;
+        }
+    }
+
+    /// <summary>
+    /// This function make the player move with horizontalInput
+    /// </summary>
+
+    private void OnMove()
+    {
+        // Stop moving while attacking
+        if (isAttack)
+        {
+            return;
+        }
+        
+        // Float values aren't perfectly precise. We use > 0.1f to ignore float inaccuracies.
+        if(Mathf.Abs(horizontalInput) > 0.1f)
+        {
+            //Stop anim run interupt jumping animation
+            if (!isJumping)
+            {
+                ChangeAnim("run");
+            }
+            
+            //Make the player move by give player value of velocity
+            rb.linearVelocity = new Vector2(horizontalInput*Time.fixedDeltaTime*speedMove, rb.linearVelocity.y);
+
+            // Flip character based on input
+            // If input < 0.1f then flip character
+            transform.rotation = Quaternion.Euler(new Vector3(0, horizontalInput < -0.1f ? 180:0, 0));
+        }
+        else if(isGround)
+        {
+            //Stop anim idle interupt jumping animation
+        
+            if (!isJumping)
+            {
+                ChangeAnim("idle");
+            }
+            
+            //Make the player dont move instantly
+            rb.linearVelocity = Vector2.zero;
+        }
+    }
+
+    /// <summary>
+    /// This function check <see langword="if"/>  player <see langword="is"/> stay <see langword="on"/> the ground by Raycast
+    /// </summary>
+    private bool CheckGrounded()
+    {
+        Debug.DrawLine(this.transform.position, (Vector2)transform.position + Vector2.down*distanceCheckGround, Color.red);
+        // This logic shoot a laser from the player and with direction down in distance distanceCheckGround
+        // Only object with ground layer can be shooted by this laser
+        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, Vector2.down, distanceCheckGround, layerGround);
+
+        // If laser find a ground it will return a collider => player is on the ground
+        return hit.collider != null;
+    }
+
+    /// <summary>
+    /// Handle the logic attack
+    /// </summary>
+    private void Attack()
+    {
+        // Stop attack while attacking
+        if (isAttack)
+        {
+            return;
+        }
+        rb.linearVelocity  = Vector2.zero;
+        isAttack = true;
+        ChangeAnim("attack");
+
+        // Goi ham ResetAttack sau 0.5f
+        Invoke(nameof(ResetAttack), 0.5f);
+    }
+    /// <summary>
+    /// Reset Attack of player
+    /// </summary>
+
+    private void ResetAttack()
+    {
+        // Check if player is in attackState ?
+        if (isAttack)
+        {
+            ChangeAnim("idle");
+            isAttack = false;
+        }
+    }
+    /// <summary>
+    /// Handle the logic throw knife
+    /// </summary>
+    private void Throw()
+    {
+
+        // Stop throw while attacking
+        if (isAttack)
+        {
+            return;
+        }
+        rb.linearVelocity  = Vector2.zero;
+        isAttack = true;
+        ChangeAnim("throw");
+        // Goi ham ResetAttack sau 0.5f
+        Invoke(nameof(ResetAttack), 0.5f);
+        
+    }
+
+
+    /// <summary>
+    /// <see langword="this"/> function change the Animator of player <see langword="by"/> <paramref name="animName"/> trigger 
+    /// </summary>
+    /// <param name="animName"></param>
+
+    private void ChangeAnim(string animName)
+    {
+        if(currentAnimName != animName)
+        {
+            // Clear pending triggers and Set new trigger anim
+            animator.ResetTrigger(animName);
+            if(currentAnimName != null)
+            {
+                animator.ResetTrigger(currentAnimName);
+            }
+            
+
+            currentAnimName = animName;
+
+            animator.SetTrigger(animName);
+        }
+    }
+}
+
