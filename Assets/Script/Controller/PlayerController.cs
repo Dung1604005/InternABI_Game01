@@ -245,8 +245,6 @@ public class PlayerController : MonoBehaviour
             {
                 animator.ResetTrigger(currentAnimName);
             }
-            
-
             currentAnimName = animName;
 
             animator.SetTrigger(animName);
