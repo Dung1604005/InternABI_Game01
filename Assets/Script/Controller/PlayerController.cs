@@ -33,11 +33,49 @@ public class PlayerController : MonoBehaviour
 
     private bool isAttack;
 
+    private int coin = 0;
+
+    private bool isDeath = false;
+
     private float horizontalInput;
 
     private string currentAnimName;
 
-    
+    private Vector3 savePoint;
+
+    /// <summary>
+    /// this function init all basic state or stat of player   
+    /// </summary>
+
+    public void OnInit()
+    {
+        isDeath = false;
+        isAttack = false;
+
+        isJumping = false;
+
+        jumpRequested = false;
+
+        //Reset player position to save point position
+        transform.position = savePoint;
+
+        ChangeAnim("idle");
+
+    }
+
+    /// <summary>
+    /// This function store current position of player <see langword="into"/> savePoint 
+    /// </summary>
+    public void SavePoint()
+    {
+        savePoint = transform.position;
+    }
+
+    void Awake()
+    {
+        SavePoint();
+        OnInit();
+    }
 
     
     void Start()
@@ -48,6 +86,11 @@ public class PlayerController : MonoBehaviour
     //Handle physics logic inside FixedUpdate to sync with Unity's physics system
     void FixedUpdate()
     {
+        // Player died => Stop update anything
+        if (isDeath)
+        {
+            return;
+        }
         //Check if whether the player is on the ground
         isGround = CheckGrounded();
 
@@ -63,12 +106,17 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // Player died => Stop update anything
+        if (isDeath)
+        {
+            return;
+        }
         // value is in range -1 to 1
         horizontalInput = Input.GetAxisRaw("Horizontal");
 
         // If player click Space and the player is on the ground
         // => Send signal for FixedUpdate handle logic jump
-        if(Input.GetKeyDown(KeyCode.Space) && isGround)
+        if(Input.GetKeyDown(KeyCode.Space) && isGround && !isJumping)
         {
             jumpRequested = true;
         }
@@ -79,12 +127,13 @@ public class PlayerController : MonoBehaviour
             Attack();
         }
 
+        //Throw
         if(Input.GetKeyDown(KeyCode.C) && isGround)
         {
             Throw();
         }
 
-        Debug.Log(isAttack);
+        
 
         
     }
@@ -100,20 +149,16 @@ public class PlayerController : MonoBehaviour
             return;
         }
         
-        //If player is on the ground
-        //=> Player no longer in the air 
-        if (isGround)
-        {
-            isJumping = false;
-        }
+        
         // Check the condition if the player is in the Air and have velocity.y negative
         // => Set Player fall
-        if(!isGround && rb.linearVelocity.y < -0.1f && isJumping)
+        if(!isGround && rb.linearVelocity.y < -0.1f )
         {
             ChangeAnim("fall");
+            isJumping = false;
         }
         // Apply jump force only if a jump was requested and the player is on the ground
-        if (jumpRequested)
+        if (jumpRequested && isGround)
         {
             ChangeAnim("jump");
             rb.AddForce(jumpForce*Vector2.up, ForceMode2D.Impulse);
@@ -177,7 +222,7 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(this.transform.position, Vector2.down, distanceCheckGround, layerGround);
 
         // If laser find a ground it will return a collider => player is on the ground
-        return hit.collider != null;
+        return hit.collider != null && rb.linearVelocity.y <= 0.01f;
     }
 
     /// <summary>
@@ -248,6 +293,27 @@ public class PlayerController : MonoBehaviour
             currentAnimName = animName;
 
             animator.SetTrigger(animName);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // If the player collide with a coin, destroy coin and increase the amount coint of player
+        if(collision.tag == "Coin")
+        {
+            coin++;
+            Destroy(collision.gameObject);
+        }
+
+        //The player collide with Deadzone => player die
+        if(collision.tag == "DeadZone")
+        {
+            isDeath = true;
+            ChangeAnim("die");
+
+            //Init the player stat, state after 1s
+            Invoke(nameof(OnInit), 1f);
+
         }
     }
 }

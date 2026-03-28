@@ -322,9 +322,9 @@ TextureImporter:
       name: coin_1
       rect:
         serializedVersion: 2
-        x: 112
+        x: 110
         y: 383
-        width: 57
+        width: 62
         height: 61
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -344,9 +344,9 @@ TextureImporter:
       name: coin_2
       rect:
         serializedVersion: 2
-        x: 183
-        y: 383
-        width: 53
+        x: 179
+        y: 384
+        width: 62
         height: 61
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -366,10 +366,10 @@ TextureImporter:
       name: coin_3
       rect:
         serializedVersion: 2
-        x: 248
+        x: 250
         y: 383
-        width: 50
-        height: 97
+        width: 62
+        height: 61
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -388,10 +388,10 @@ TextureImporter:
       name: coin_4
       rect:
         serializedVersion: 2
-        x: 336
-        y: 383
-        width: 44
-        height: 97
+        x: 317
+        y: 382
+        width: 62
+        height: 61
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -410,10 +410,10 @@ TextureImporter:
       name: coin_5
       rect:
         serializedVersion: 2
-        x: 405
-        y: 384
-        width: 24
-        height: 60
+        x: 387
+        y: 383
+        width: 62
+        height: 61
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -432,9 +432,9 @@ TextureImporter:
       name: coin_6
       rect:
         serializedVersion: 2
-        x: 468
+        x: 457
         y: 383
-        width: 37
+        width: 62
         height: 61
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -454,9 +454,9 @@ TextureImporter:
       name: coin_7
       rect:
         serializedVersion: 2
-        x: 528
-        y: 383
-        width: 54
+        x: 524
+        y: 384
+        width: 62
         height: 61
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -476,10 +476,10 @@ TextureImporter:
       name: coin_8
       rect:
         serializedVersion: 2
-        x: 595
+        x: 593
         y: 384
-        width: 59
-        height: 60
+        width: 62
+        height: 62
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -500,7 +500,7 @@ TextureImporter:
         serializedVersion: 2
         x: 663
         y: 383
-        width: 105
+        width: 62
         height: 61
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
