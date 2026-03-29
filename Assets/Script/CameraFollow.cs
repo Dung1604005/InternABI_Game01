@@ -7,8 +7,9 @@ public class CameraFollow : MonoBehaviour
     // offset between target and camera
     [SerializeField]private Vector3 offset;
 
-    [SerializeField] private float speed;
+    
 
+    [SerializeField] private float speed;
 
     void Awake()
     {

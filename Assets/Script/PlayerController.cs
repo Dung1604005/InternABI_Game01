@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Character
 {
     [Header("CheckGround Condition")]
 
@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Reference")]
 
-    [SerializeField] private Animator animator;
+    
 
     [SerializeField] private Rigidbody2D rb;
 
@@ -39,21 +39,21 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalInput;
 
-    private string currentAnimName;
+    
 
     private Vector3 savePoint;
 
-    /// <summary>
-    /// this function init all basic state or stat of player   
-    /// </summary>
+    
 
-    public void OnInit()
+    protected override void OnInit()
     {
+        //CALL BASE METHOD: Ensure base class cleanup logic is executed.
+        base.OnInit();
+
+        //Set all state to origin
         isDeath = false;
         isAttack = false;
-
         isJumping = false;
-
         jumpRequested = false;
 
         //Reset player position to save point position
@@ -61,6 +61,16 @@ public class PlayerController : MonoBehaviour
 
         ChangeAnim("idle");
 
+    }
+
+    protected override void OnDeSpawn()
+    {
+        base.OnDeSpawn();
+    }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
     }
 
     /// <summary>
@@ -74,7 +84,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         SavePoint();
-        OnInit();
+        
     }
 
     
@@ -275,26 +285,6 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// <see langword="this"/> function change the Animator of player <see langword="by"/> <paramref name="animName"/> trigger 
-    /// </summary>
-    /// <param name="animName"></param>
-
-    private void ChangeAnim(string animName)
-    {
-        if(currentAnimName != animName)
-        {
-            // Clear pending triggers and Set new trigger anim
-            animator.ResetTrigger(animName);
-            if(currentAnimName != null)
-            {
-                animator.ResetTrigger(currentAnimName);
-            }
-            currentAnimName = animName;
-
-            animator.SetTrigger(animName);
-        }
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
