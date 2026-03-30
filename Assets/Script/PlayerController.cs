@@ -15,11 +15,19 @@ public class PlayerController : Character
 
     [SerializeField] private Rigidbody2D rb;
 
+    [SerializeField] private Kunai kunaiPrefab;
+
+    [SerializeField] private GameObject attackAreaGameobject;
+
+    
+
     [Header("Stat Player")]
 
     [SerializeField] private float speedMove;
 
     [SerializeField] private float jumpForce;
+
+    [SerializeField] private Transform throwPoint;
 
 
 
@@ -60,12 +68,17 @@ public class PlayerController : Character
         transform.position = savePoint;
 
         ChangeAnim("idle");
+        // clear all attack state, stat...
+        DeActiveAttack();
+        SavePoint();
 
     }
 
     protected override void OnDeSpawn()
     {
+        // Respawn after death
         base.OnDeSpawn();
+        OnInit();
     }
 
     protected override void OnDeath()
@@ -81,11 +94,7 @@ public class PlayerController : Character
         savePoint = transform.position;
     }
 
-    void Awake()
-    {
-        SavePoint();
-        
-    }
+    
 
     
     void Start()
@@ -97,7 +106,7 @@ public class PlayerController : Character
     void FixedUpdate()
     {
         // Player died => Stop update anything
-        if (isDeath)
+        if (base.IsDead)
         {
             return;
         }
@@ -117,7 +126,7 @@ public class PlayerController : Character
     void Update()
     {
         // Player died => Stop update anything
-        if (isDeath)
+        if (base.IsDead)
         {
             return;
         }
@@ -249,8 +258,15 @@ public class PlayerController : Character
         isAttack = true;
         ChangeAnim("attack");
 
-        // Goi ham ResetAttack sau 0.5f
+        // call ResetAttack after 0.5s
         Invoke(nameof(ResetAttack), 0.5f);
+
+        // Turn on the attack area, ....
+        ActiveAttack();
+
+        // Turn off the attack area after 0.5s
+
+        Invoke(nameof(DeActiveAttack), 0.5f);
     }
     /// <summary>
     /// Reset Attack of player
@@ -281,7 +297,19 @@ public class PlayerController : Character
         ChangeAnim("throw");
         // Goi ham ResetAttack sau 0.5f
         Invoke(nameof(ResetAttack), 0.5f);
+
+        Instantiate(kunaiPrefab, throwPoint.position, throwPoint.rotation);
         
+    }
+
+    private void ActiveAttack()
+    {
+        attackAreaGameobject.SetActive(true);
+    }
+
+    private void DeActiveAttack()
+    {
+        attackAreaGameobject.SetActive(false);
     }
 
 

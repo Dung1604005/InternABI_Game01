@@ -40,8 +40,10 @@ public class Character : MonoBehaviour
     /// </summary>
     protected virtual void OnDeath()
     {
+        
         // play animation death
         ChangeAnim("die");
+        Invoke(nameof(OnDeSpawn), 2f);
     }
     /// <summary>
     /// <see langword="this"/> function change the Animator of character <see langword="by"/> <paramref name="animName"/> trigger 
@@ -72,12 +74,14 @@ public class Character : MonoBehaviour
 
     public void OnHit(float damage)
     {
+        
         // if character is not dead then calculate the remaining hp
         if (!IsDead)
         {
             hp = Mathf.Max(0f, hp - damage);
+            Debug.Log("HIT " + gameObject.tag + " " + hp);
             // Check if character is death ?
-            if(hp <= 0)
+            if(hp <= 0.1f)
             {
                 OnDeath();
             }

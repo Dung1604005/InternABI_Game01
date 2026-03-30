@@ -15,11 +15,12 @@ public class IdleState: IState
 
     public void OnExecute(Enemy enemy)
     {
+        timer += Time.deltaTime;
         if(timer > randomTime)
         {
             enemy.ChangeState(new PatrolState());
         }
-        timer += Time.deltaTime;
+       
     }
 
     public void OnExit(Enemy enemy)
