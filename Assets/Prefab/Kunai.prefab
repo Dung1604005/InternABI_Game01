@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5707cac17859aea42ba423316e22e33b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kunai
+  hitVFX: {fileID: 3345993895119536028, guid: 411aed117aa75ac4781b50c76620570c, type: 3}
   rb: {fileID: 1132126167848982784}
 --- !u!1 &6336031546552141936
 GameObject:

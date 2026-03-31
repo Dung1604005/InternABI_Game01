@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Kunai : MonoBehaviour
 {
+    public GameObject hitVFX;
     public Rigidbody2D rb;
     void Start()
     {
@@ -30,6 +31,7 @@ public class Kunai : MonoBehaviour
         if(collider2D.tag == "Enemy")
         {
             collider2D.GetComponent<Character>().OnHit(30f);
+            Instantiate(hitVFX, transform.position, transform.rotation);
             OnDespawn();
         }
     }
