@@ -6,6 +6,10 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [SerializeField] private Animator animator;
+
+    [SerializeField] protected HealthBar healthBar;
+
+    [SerializeField] protected CombatText combatTextPrefab;
     private string currentAnimName;
     private float hp;
 
@@ -22,6 +26,7 @@ public class Character : MonoBehaviour
     protected virtual void OnInit()
     {
         hp = 100f;
+        healthBar.OnInit(100, this.transform);
     }
 
 
@@ -44,6 +49,7 @@ public class Character : MonoBehaviour
         // play animation death
         ChangeAnim("die");
         Invoke(nameof(OnDeSpawn), 2f);
+        
     }
     /// <summary>
     /// <see langword="this"/> function change the Animator of character <see langword="by"/> <paramref name="animName"/> trigger 
@@ -79,12 +85,16 @@ public class Character : MonoBehaviour
         if (!IsDead)
         {
             hp = Mathf.Max(0f, hp - damage);
-            Debug.Log("HIT " + gameObject.tag + " " + hp);
+            //Update current hp for healthbarUI
+            healthBar.SetNewHp(hp);
             // Check if character is death ?
             if(hp <= 0.1f)
             {
                 OnDeath();
             }
+
+            // Spawn a text display hp lost on top of character
+            Instantiate(combatTextPrefab, transform.position + Vector3.up, Quaternion.identity).OnInit(damage);
         }
     }
 

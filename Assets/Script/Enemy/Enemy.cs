@@ -29,12 +29,14 @@ public class Enemy : Character
     {
         
         base.OnDeSpawn();
+        Destroy(healthBar);
         Destroy(gameObject);
     }
 
     protected override void OnDeath()
     {
         ChangeState(null);
+        rb.linearVelocity = Vector2.zero;
         base.OnDeath();
     }
 
@@ -118,7 +120,7 @@ public class Enemy : Character
     void Update()
     {
         // Execute for currentState
-        if(currentState != null)
+        if(currentState != null && !IsDead)
         {
             currentState.OnExecute(this);
         }

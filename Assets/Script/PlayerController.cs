@@ -19,6 +19,8 @@ public class PlayerController : Character
 
     [SerializeField] private GameObject attackAreaGameobject;
 
+
+
     
 
     [Header("Stat Player")]
@@ -78,12 +80,14 @@ public class PlayerController : Character
     {
         // Respawn after death
         base.OnDeSpawn();
+        
         OnInit();
     }
 
     protected override void OnDeath()
     {
         base.OnDeath();
+        rb.linearVelocity = Vector2.zero;
     }
 
     /// <summary>
@@ -210,7 +214,7 @@ public class PlayerController : Character
             }
             
             //Make the player move by give player value of velocity
-            rb.linearVelocity = new Vector2(horizontalInput*Time.fixedDeltaTime*speedMove, rb.linearVelocity.y);
+            rb.linearVelocity = new Vector2(horizontalInput*speedMove, rb.linearVelocity.y);
 
             // Flip character based on input
             // If input < 0.1f then flip character
@@ -275,7 +279,7 @@ public class PlayerController : Character
     private void ResetAttack()
     {
         // Check if player is in attackState ?
-        if (isAttack)
+        if (isAttack && !IsDead)
         {
             ChangeAnim("idle");
             isAttack = false;
