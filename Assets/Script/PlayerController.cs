@@ -74,6 +74,8 @@ public class PlayerController : Character
         DeActiveAttack();
         SavePoint();
 
+        UIManager.Instance.SetCoin(coin);
+
     }
 
     protected override void OnDeSpawn()
@@ -103,6 +105,7 @@ public class PlayerController : Character
     
     void Start()
     {
+        coin = PlayerPrefs.GetInt("coin", 0);
 
     }
 
@@ -324,7 +327,9 @@ public class PlayerController : Character
         if(collision.tag == "Coin")
         {
             coin++;
+            PlayerPrefs.SetInt("coin", coin);
             Destroy(collision.gameObject);
+            UIManager.Instance.SetCoin(coin);
         }
 
         //The player collide with Deadzone => player die

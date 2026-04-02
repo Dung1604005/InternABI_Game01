@@ -224,7 +224,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &5260856307777799187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,4 +288,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8155162178dbc094f8df5c8a078cd622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CombatText
-  damageText: {fileID: 0}
+  damageText: {fileID: 9111323818443399731}

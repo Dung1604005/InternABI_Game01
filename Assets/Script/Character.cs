@@ -58,6 +58,10 @@ public class Character : MonoBehaviour
 
     protected void ChangeAnim(string animName)
     {
+        if(IsDead && animName != "die")
+        {
+            return;
+        }
         if(currentAnimName != animName)
         {
             // Clear pending triggers and Set new trigger anim
@@ -94,7 +98,8 @@ public class Character : MonoBehaviour
             }
 
             // Spawn a text display hp lost on top of character
-            Instantiate(combatTextPrefab, transform.position + Vector3.up, Quaternion.identity).OnInit(damage);
+            CombatText combatText = Instantiate(combatTextPrefab, transform.position + Vector3.up, Quaternion.identity);
+            combatText.OnInit(damage);
         }
     }
 

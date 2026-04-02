@@ -29,7 +29,7 @@ public class Enemy : Character
     {
         
         base.OnDeSpawn();
-        Destroy(healthBar);
+        Destroy(healthBar.gameObject);
         Destroy(gameObject);
     }
 

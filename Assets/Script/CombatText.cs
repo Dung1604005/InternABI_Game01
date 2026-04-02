@@ -9,6 +9,9 @@ public class CombatText : MonoBehaviour
     {
         //Init damage text
         damageText.text = damage.ToString();
+
+        // Destroy object after 1.5s
+        Invoke(nameof(OnDeSpawn), 1.5f);
     }
 
     public void OnDeSpawn()
