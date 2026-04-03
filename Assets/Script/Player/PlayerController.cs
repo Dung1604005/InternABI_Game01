@@ -15,23 +15,21 @@ public class PlayerController : Character
 
     [SerializeField] private Rigidbody2D rb;
 
-    [SerializeField] private Kunai kunaiPrefab;
+    [SerializeField] private CombatSystem combatSystem;
 
-    [SerializeField] private GameObject attackAreaGameobject;
+    public CombatSystem CombatSystem => combatSystem;
 
-
-
-    
 
     [Header("Stat Player")]
+    //Store current shield player have
 
-    [SerializeField] private float speedMove;
+    [SerializeField] private int currentShields;
 
     [SerializeField] private float jumpForce;
 
-    [SerializeField] private Transform throwPoint;
+    [SerializeField] private PlayerStat playerStat;
 
-
+    public PlayerStat PlayerStat => playerStat;
 
     private bool isGround;
 
@@ -41,11 +39,8 @@ public class PlayerController : Character
 
     private bool jumpRequested = false;
 
-    private bool isAttack;
-
+   
     private int coin = 0;
-
-    private bool isDeath = false;
 
     private float horizontalInput;
 
@@ -53,25 +48,36 @@ public class PlayerController : Character
 
     private Vector3 savePoint;
 
+    protected override void Awake()
+    {
+        playerStat = GetComponent<PlayerStat>();
+        OnInit();
+    }
+
     
 
     protected override void OnInit()
     {
-        //CALL BASE METHOD: Ensure base class cleanup logic is executed.
-        base.OnInit();
+        
 
         //Set all state to origin
-        isDeath = false;
-        isAttack = false;
+        
+        
+        
         isJumping = false;
         jumpRequested = false;
+        currentHp = playerStat.MaxHealth;
+        currentShields = playerStat.Shields;
+        currentDamage = playerStat.Damage;
+        healthBar.OnInit(currentHp, this.transform);
+        
 
         //Reset player position to save point position
         transform.position = savePoint;
 
         ChangeAnim("idle");
         // clear all attack state, stat...
-        DeActiveAttack();
+        combatSystem.OnInit();
         SavePoint();
 
         UIManager.Instance.SetCoin(coin);
@@ -82,7 +88,7 @@ public class PlayerController : Character
     {
         // Respawn after death
         base.OnDeSpawn();
-        
+        playerStat.OnDeSpawn();
         OnInit();
     }
 
@@ -100,7 +106,42 @@ public class PlayerController : Character
         savePoint = transform.position;
     }
 
-    
+     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="healAmount"></param>
+
+    public void OnHeal(float healAmount)
+    {
+        // if character is not dead then update health
+        if (!IsDead)
+        {
+            // Dont let health of character over maxHp
+            currentHp = Mathf.Max(playerStat.MaxHealth, currentHp + healAmount);
+            //Update current hp for healthbarUI
+            healthBar.SetNewHp(currentHp);
+        
+        }
+    }
+
+    public override void OnHit(float damage)
+    {
+        // If player have shield, use shield to prevent damage;
+        if(currentShields > 0)
+        {
+            currentShields -= 1;
+            return;// Stop to not get hit
+        }
+        base.OnHit(damage);
+    }
+    public void UpdateDamage(float newDamage)
+    {
+        currentDamage = newDamage;
+    }
+    public void RestoreShields()
+    {
+        currentShields = playerStat.Shields;
+    }
 
     
     void Start()
@@ -150,13 +191,22 @@ public class PlayerController : Character
         // Attack
         if(Input.GetKeyDown(KeyCode.Mouse0) && isGround)
         {
-            Attack();
+            if (combatSystem.CanAttackMelee())
+            {
+                rb.linearVelocity = Vector2.zero;
+                combatSystem.ExecuteAttackMelee();
+            }
+            
         }
 
         //Throw
         if(Input.GetKeyDown(KeyCode.C) && isGround)
         {
-            Throw();
+            if (combatSystem.CanAttackKunai())
+            {
+                rb.linearVelocity = Vector2.zero;
+                combatSystem.ExecuteThrowKunai();
+            }
         }
 
         
@@ -170,7 +220,7 @@ public class PlayerController : Character
     private void OnJump()
     {
         // Stop moving while jump
-        if (isAttack)
+        if (combatSystem.IsAttacking)
         {
             return;
         }
@@ -202,7 +252,7 @@ public class PlayerController : Character
     private void OnMove()
     {
         // Stop moving while attacking
-        if (isAttack)
+        if (combatSystem.IsAttacking)
         {
             return;
         }
@@ -217,7 +267,7 @@ public class PlayerController : Character
             }
             
             //Make the player move by give player value of velocity
-            rb.linearVelocity = new Vector2(horizontalInput*speedMove, rb.linearVelocity.y);
+            rb.linearVelocity = new Vector2(horizontalInput*playerStat.SpeedMove, rb.linearVelocity.y);
 
             // Flip character based on input
             // If input < 0.1f then flip character
@@ -251,73 +301,11 @@ public class PlayerController : Character
         return hit.collider != null && rb.linearVelocity.y <= 0.01f;
     }
 
-    /// <summary>
-    /// Handle the logic attack
-    /// </summary>
-    private void Attack()
-    {
-        // Stop attack while attacking
-        if (isAttack)
-        {
-            return;
-        }
-        rb.linearVelocity  = Vector2.zero;
-        isAttack = true;
-        ChangeAnim("attack");
+    
+    
+    
 
-        // call ResetAttack after 0.5s
-        Invoke(nameof(ResetAttack), 0.5f);
-
-        // Turn on the attack area, ....
-        ActiveAttack();
-
-        // Turn off the attack area after 0.5s
-
-        Invoke(nameof(DeActiveAttack), 0.5f);
-    }
-    /// <summary>
-    /// Reset Attack of player
-    /// </summary>
-
-    private void ResetAttack()
-    {
-        // Check if player is in attackState ?
-        if (isAttack && !IsDead)
-        {
-            ChangeAnim("idle");
-            isAttack = false;
-        }
-    }
-    /// <summary>
-    /// Handle the logic throw knife
-    /// </summary>
-    private void Throw()
-    {
-
-        // Stop throw while attacking
-        if (isAttack)
-        {
-            return;
-        }
-        rb.linearVelocity  = Vector2.zero;
-        isAttack = true;
-        ChangeAnim("throw");
-        // Goi ham ResetAttack sau 0.5f
-        Invoke(nameof(ResetAttack), 0.5f);
-
-        Instantiate(kunaiPrefab, throwPoint.position, throwPoint.rotation);
-        
-    }
-
-    private void ActiveAttack()
-    {
-        attackAreaGameobject.SetActive(true);
-    }
-
-    private void DeActiveAttack()
-    {
-        attackAreaGameobject.SetActive(false);
-    }
+    
 
 
 
@@ -335,7 +323,7 @@ public class PlayerController : Character
         //The player collide with Deadzone => player die
         if(collision.tag == "DeadZone")
         {
-            isDeath = true;
+            OnHit(99999f);
             ChangeAnim("die");
 
             //Init the player stat, state after 1s

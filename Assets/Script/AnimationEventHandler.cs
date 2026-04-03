@@ -12,9 +12,12 @@ public class AnimationEventHandler : MonoBehaviour
     {
         playerController = GetComponentInParent<PlayerController>();
     }
-    /// <summary>
-    /// Call <see langword="when"/> player end attack 
-    /// </summary>
+    
+
+    public void OnEndAttack()
+    {
+        
+    }
 
     
 }

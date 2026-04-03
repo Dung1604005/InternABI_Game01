@@ -5383,6 +5383,7 @@ GameObject:
   - component: {fileID: 587471368}
   - component: {fileID: 587471370}
   - component: {fileID: 587471369}
+  - component: {fileID: 587471371}
   m_Layer: 0
   m_Name: PlayerVisual
   m_TagString: Untagged
@@ -5486,6 +5487,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &587471371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587471367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9167ff43485ea24daa4adac64103588, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventHandler
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -5651,7 +5664,7 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!4 &619892239
@@ -5692,11 +5705,10 @@ MonoBehaviour:
     m_Bits: 8
   distanceCheckGround: 1.15
   rb: {fileID: 619892238}
-  kunaiPrefab: {fileID: 2310978965233184460, guid: a304b98eadba5544b95f86e813ff63da, type: 3}
-  attackAreaGameobject: {fileID: 461519385}
-  speedMove: 5
+  combatSystem: {fileID: 0}
+  currentShields: 0
   jumpForce: 10
-  throwPoint: {fileID: 1398877365}
+  playerStat: {fileID: 0}
 --- !u!114 &619892241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5714,6 +5726,7 @@ MonoBehaviour:
   shields: 0
   cdr: 0
   maxCdr: 40
+  speedMove: 5
 --- !u!1 &629547528
 GameObject:
   m_ObjectHideFlags: 0
@@ -7708,7 +7721,7 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!4 &1471042232

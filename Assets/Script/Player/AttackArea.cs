@@ -8,6 +8,7 @@ public class AttackArea : MonoBehaviour
         // => Cause damage for that character
         if(collider2D.tag == "Enemy" || collider2D.tag == "Player")
         {
+            
             collider2D.GetComponent<Character>().OnHit(30f);
         }
     }

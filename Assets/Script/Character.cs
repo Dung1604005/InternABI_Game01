@@ -7,15 +7,23 @@ public class Character : MonoBehaviour
 {
     [SerializeField] private Animator animator;
 
+    public Animator Anim => animator;
+
     [SerializeField] protected HealthBar healthBar;
 
     [SerializeField] protected CombatText combatTextPrefab;
     private string currentAnimName;
-    private float hp;
 
-    public bool IsDead => hp <=0;
+    //Store current hp character have
+    protected float currentHp;
 
-    void Awake()
+    protected float maxHp;
+
+    protected float currentDamage;
+
+    public bool IsDead => currentHp <=0;
+
+    protected virtual void Awake()
     {
         OnInit();
     }
@@ -25,8 +33,9 @@ public class Character : MonoBehaviour
     /// </summary>
     protected virtual void OnInit()
     {
-        hp = 100f;
-        healthBar.OnInit(100, this.transform);
+        maxHp = 100f;
+        currentHp = maxHp;
+        healthBar.OnInit(currentHp, this.transform);
     }
 
 
@@ -51,12 +60,16 @@ public class Character : MonoBehaviour
         Invoke(nameof(OnDeSpawn), 2f);
         
     }
+    public void SetCurrentAnim(string _currentAnimName)
+    {
+        currentAnimName = _currentAnimName;
+    }
     /// <summary>
     /// <see langword="this"/> function change the Animator of character <see langword="by"/> <paramref name="animName"/> trigger 
     /// </summary>
     /// <param name="animName"></param>
 
-    protected void ChangeAnim(string animName)
+    public void ChangeAnim(string animName)
     {
         if(IsDead && animName != "die")
         {
@@ -66,15 +79,14 @@ public class Character : MonoBehaviour
         {
             // Clear pending triggers and Set new trigger anim
             animator.ResetTrigger(animName);
-            if(currentAnimName != null)
-            {
-                animator.ResetTrigger(currentAnimName);
-            }
+            
             currentAnimName = animName;
 
             animator.SetTrigger(animName);
         }
     }
+
+
 
     /// <summary>
     /// this function is call when character is attacked.
@@ -82,17 +94,17 @@ public class Character : MonoBehaviour
     /// </summary>
     /// <param name="damage"></param>
 
-    public void OnHit(float damage)
+    public virtual void OnHit(float damage)
     {
         
         // if character is not dead then calculate the remaining hp
         if (!IsDead)
         {
-            hp = Mathf.Max(0f, hp - damage);
+            currentHp = Mathf.Max(0f, currentHp - damage);
             //Update current hp for healthbarUI
-            healthBar.SetNewHp(hp);
+            healthBar.SetNewHp(currentHp);
             // Check if character is death ?
-            if(hp <= 0.1f)
+            if(currentHp <= 0.1f)
             {
                 OnDeath();
             }
@@ -102,6 +114,8 @@ public class Character : MonoBehaviour
             combatText.OnInit(damage);
         }
     }
+
+   
 
     
     
