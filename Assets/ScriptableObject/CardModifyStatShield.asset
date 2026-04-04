@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CardModifyStatShield
   m_EditorClassIdentifier: Assembly-CSharp::CardModifyStat
   idCard: 5944
-  cardName: GUARD
+  cardName: GUARD V2
   description: 'Increase your shield by 3 '
   rarity: 1
   stackCount: 99
-  playerStatType: 0
+  playerStatType: 2
   increaseAmount: 3

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1972cda2123024388c6e21d0a96998, type: 3}
   m_Name: CardModifyStat 1
   m_EditorClassIdentifier: Assembly-CSharp::CardModifyStat
-  idCard: 
-  cardName: 
-  description: 
+  idCard: 32134
+  cardName: ATTACK FASTER
+  description: Increase your CDR by 10%
   rarity: 0
-  stackCount: 0
-  playerStatType: 0
-  increaseAmount: 0
+  stackCount: 333
+  playerStatType: 3
+  increaseAmount: 0.1

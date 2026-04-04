@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1972cda2123024388c6e21d0a96998, type: 3}
   m_Name: CardModifyStatShield 1
   m_EditorClassIdentifier: Assembly-CSharp::CardModifyStat
-  idCard: 5944
+  idCard: 4454
   cardName: GUARD
-  description: 'Increase your shield by 3 '
-  rarity: 1
+  description: 'Increase your shield by 1 '
+  rarity: 0
   stackCount: 99
-  playerStatType: 0
-  increaseAmount: 3
+  playerStatType: 2
+  increaseAmount: 1

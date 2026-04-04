@@ -18,4 +18,4 @@ MonoBehaviour:
   rarity: 1
   stackCount: 99
   playerStatType: 0
-  increaseAmount: 100
+  increaseAmount: 500
