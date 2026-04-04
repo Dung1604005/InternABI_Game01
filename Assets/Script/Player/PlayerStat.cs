@@ -64,6 +64,7 @@ public class PlayerStat : MonoBehaviour
             case PlayerStatType.HEALTH:
                // Increase max health and heal the amountIncrease for player
                SetMaxHealth(maxHealth + amountIncrease);
+               playerController.HealthBar.SetNewMaxHp(maxHealth);
                playerController.OnHeal(amountIncrease);
                break;
             case PlayerStatType.DAMAGE:
@@ -73,7 +74,7 @@ public class PlayerStat : MonoBehaviour
                break;
             case PlayerStatType.SHIELDS:
                // Update new max shield then restore current shield of player
-               SetShields(shields + (int)amountIncrease);
+               SetShields(shields + Mathf.FloorToInt(amountIncrease));
                playerController.RestoreShields();
                break;
             case PlayerStatType.CDR:

@@ -70,6 +70,8 @@ public class PlayerController : Character
         currentShields = playerStat.Shields;
         currentDamage = playerStat.Damage;
         healthBar.OnInit(currentHp, this.transform);
+        // Update UI shield to display
+        UIManager.Instance.SetShield(currentShields);
         
 
         //Reset player position to save point position
@@ -117,7 +119,7 @@ public class PlayerController : Character
         if (!IsDead)
         {
             // Dont let health of character over maxHp
-            currentHp = Mathf.Max(playerStat.MaxHealth, currentHp + healAmount);
+            currentHp = Mathf.Min(playerStat.MaxHealth, currentHp + healAmount);
             //Update current hp for healthbarUI
             healthBar.SetNewHp(currentHp);
         
@@ -129,7 +131,10 @@ public class PlayerController : Character
         // If player have shield, use shield to prevent damage;
         if(currentShields > 0)
         {
+            // Update UI shield to display
+            
             currentShields -= 1;
+            UIManager.Instance.SetShield(currentShields);
             return;// Stop to not get hit
         }
         base.OnHit(damage);
@@ -140,7 +145,10 @@ public class PlayerController : Character
     }
     public void RestoreShields()
     {
+        // Update UI shield to display
+        
         currentShields = playerStat.Shields;
+        UIManager.Instance.SetShield(currentShields);
     }
 
     
@@ -261,7 +269,7 @@ public class PlayerController : Character
         if(Mathf.Abs(horizontalInput) > 0.1f)
         {
             //Stop anim run interupt jumping animation
-            if (!isJumping)
+            if (!isJumping )
             {
                 ChangeAnim("run");
             }

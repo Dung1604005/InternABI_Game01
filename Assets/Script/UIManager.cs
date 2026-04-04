@@ -21,8 +21,16 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI  coinText;
 
+    [SerializeField] private TextMeshProUGUI shieldText;
+
     public void SetCoin(int coint)
     {
         coinText.text = coint.ToString();
+    }
+
+    public void SetShield(int shield)
+    {
+        //Update text
+        shieldText.text = "x" +  shield.ToString();
     }
 }

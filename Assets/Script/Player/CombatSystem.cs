@@ -16,6 +16,9 @@ public class CombatSystem : MonoBehaviour
 
     [SerializeField] private bool canCombo;
 
+    // This para control if player can combo next attack
+    private bool isCombo;
+
     
     // player have to unlock combo with card Upgrade
     [SerializeField] private bool unlockedCombo;
@@ -24,7 +27,7 @@ public class CombatSystem : MonoBehaviour
 
     [SerializeField] private float cooldownAttackMelee;
 
-    [SerializeField] private GameObject attackAreaGameobject;
+    [SerializeField] private AttackArea attackArea;
 
     [Header("Throw Kunai")]
 
@@ -40,6 +43,8 @@ public class CombatSystem : MonoBehaviour
 
     // This equal number of kunai throwed when player throw 
     [SerializeField] private int levelModifyKunai;
+
+
 
 
     void Update()
@@ -62,7 +67,7 @@ public class CombatSystem : MonoBehaviour
    
     public bool CanAttackMelee()
     {
-        return timerAttackMelee >= cooldownAttackMelee*(1f- playerController.PlayerStat.Cdr);
+        return timerAttackMelee >= cooldownAttackMelee*(1f- playerController.PlayerStat.Cdr)|| canCombo;
     }
 
     /// <summary>
@@ -73,17 +78,19 @@ public class CombatSystem : MonoBehaviour
 
     public bool CanAttackKunai()
     {
-        return timerAttackKunai >= cooldownAttackKunai*(1f- playerController.PlayerStat.Cdr);
+        return timerAttackKunai >= cooldownAttackKunai*(1f- playerController.PlayerStat.Cdr) ;
     }
 
     public void ExecuteAttackMelee()
     {
+
+        Debug.Log(isAttacking  + " " + canCombo );
         // If player haven't attacked yet
         if (!isAttacking)
         {
             // Reset timer
             timerAttackMelee = 0f;
-            attackAreaGameobject.SetActive(true);
+            
             isAttacking = true;
             // Activate Anim attack
             playerController.SetCurrentAnim("attack");
@@ -92,9 +99,20 @@ public class CombatSystem : MonoBehaviour
         // If player is attacking and can combo
         else if (canCombo && unlockedCombo)
         {
-            playerController.Anim.SetTrigger("attack"); 
+            Debug.Log("Start combo");
+            playerController.SetCurrentAnim("combo");
+            playerController.Anim.SetTrigger("combo"); 
+            // Give a signal for code understand player can combo next attack
+            isCombo = true;
             canCombo = false; // Wait for open window combo
         }
+    }
+    // Turn on attack area right on time player slash
+    public void TriggerDamage()
+    {
+        attackArea.SetDamage(damageScaleMelee*playerController.PlayerStat.Damage);
+        attackArea.gameObject.SetActive(true);
+        
     }
     /// <summary>
     /// This was designed to attach to Animation event to open comboWindow
@@ -104,6 +122,7 @@ public class CombatSystem : MonoBehaviour
     {
         // make player can combo
         canCombo = true;
+        
     }
 
     /// <summary>
@@ -113,6 +132,10 @@ public class CombatSystem : MonoBehaviour
     {
         // prevent player combo
         canCombo = false;
+        // Reset combo in last attack
+        isCombo = false;
+
+        attackArea.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -120,8 +143,13 @@ public class CombatSystem : MonoBehaviour
     /// </summary>
     public void FinishCombo()
     {
+        // If player can combo next attack then dont finish attack
+        if (isCombo)
+        {
+            return;
+        }
         // Stop attacking and prevent combo and turn off attack Area
-        attackAreaGameobject.SetActive(false);
+        attackArea.gameObject.SetActive(false);
         isAttacking = false;
         canCombo = false;
         
@@ -142,6 +170,7 @@ public class CombatSystem : MonoBehaviour
     public void ExecuteThrowKunai()
     {
         isAttacking = true;
+        timerAttackKunai = 0f;
         playerController.ChangeAnim("throw");
         Instantiate(kunaiPrefab, throwPoint.position, throwPoint.rotation);
     }
@@ -157,7 +186,7 @@ public class CombatSystem : MonoBehaviour
 
     public void LevelUpKunaiAttack()
     {
-        levelModifyKunai = Math.Max(3, 1 + levelModifyKunai);
+        levelModifyKunai = Math.Min(3, 1 + levelModifyKunai);
     }
 
     public void OnInit()
@@ -168,8 +197,8 @@ public class CombatSystem : MonoBehaviour
         levelModifyKunai = 1;
         isAttacking =false;
         canCombo = false;
-        unlockedCombo = false;
-        attackAreaGameobject.SetActive(false);
+        unlockedCombo = true;
+        attackArea.gameObject.SetActive(false);
 
     }
 

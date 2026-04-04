@@ -29,6 +29,10 @@ public class HealthBar : MonoBehaviour
         //Update new hp
         this.hp = hp;
     }
+    public void SetNewMaxHp(float maxHp)
+    {
+        this.maxHp = hp;
+    }
 
     void Update()
     {

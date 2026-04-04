@@ -11,8 +11,10 @@ public class Character : MonoBehaviour
 
     [SerializeField] protected HealthBar healthBar;
 
+    public HealthBar HealthBar => healthBar;
+
     [SerializeField] protected CombatText combatTextPrefab;
-    private string currentAnimName;
+    protected string currentAnimName;
 
     //Store current hp character have
     protected float currentHp;
