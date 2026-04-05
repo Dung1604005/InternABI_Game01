@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class CombatSystem : MonoBehaviour
@@ -43,6 +44,8 @@ public class CombatSystem : MonoBehaviour
 
     // This equal number of kunai throwed when player throw 
     [SerializeField] private int levelModifyKunai;
+
+    [SerializeField] private float intervalThrow;
 
 
 
@@ -170,19 +173,44 @@ public class CombatSystem : MonoBehaviour
     public void ExecuteThrowKunai()
     {
         isAttacking = true;
+        // Reset timer
         timerAttackKunai = 0f;
         playerController.ChangeAnim("throw");
-        Instantiate(kunaiPrefab, throwPoint.position, throwPoint.rotation);
+
+        //Start throw kunai
+        StartCoroutine(SpawnKunai());
+        
     }
 
+    IEnumerator SpawnKunai()
+    {
+        // Throw number of kunai = levelModifyKunai
+        for(int turn = 1; turn <= levelModifyKunai; turn++)
+        {
+            
+            Instantiate(kunaiPrefab, throwPoint.position, throwPoint.rotation);
+            //wait for interval 
+            yield return new WaitForSeconds(intervalThrow);
+        }
+
+        // Stop attack
+        isAttacking = false;
+    }
+
+    
+
     /// <summary>
-    /// Increase length of combo
+    /// unlock combat
     /// </summary>
     /// <param name="bonusComboLength"></param>
     public void UnlockComboMelee()
     {
         unlockedCombo  = true;
     }
+
+    /// <summary>
+    /// Increase the amount of number kunai can <see langword="throw"/> per 1 attack 
+    /// </summary>
 
     public void LevelUpKunaiAttack()
     {

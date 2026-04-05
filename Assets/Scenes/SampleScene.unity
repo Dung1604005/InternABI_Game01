@@ -6189,6 +6189,7 @@ MonoBehaviour:
   kunaiPrefab: {fileID: 2310978965233184460, guid: a304b98eadba5544b95f86e813ff63da, type: 3}
   throwPoint: {fileID: 1398877365}
   levelModifyKunai: 1
+  intervalThrow: 0.05
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
