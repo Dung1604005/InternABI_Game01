@@ -35,6 +35,8 @@ public class PlayerController : Character
 
     private bool isJumping;
 
+    private bool isFalling;
+
     // a flag to check whether if player have input to jump or not
 
     private bool jumpRequested = false;
@@ -47,6 +49,7 @@ public class PlayerController : Character
     
 
     private Vector3 savePoint;
+    
 
     protected override void Awake()
     {
@@ -216,8 +219,10 @@ public class PlayerController : Character
                 combatSystem.ExecuteThrowKunai();
             }
         }
-
-        
+        Debug.Log("IsGround: " + isGround);
+        Debug.Log("IsFalling: " + isFalling);
+        Debug.Log("IsJumping: " + isJumping);
+        Debug.Log(rb.linearVelocityY);
 
         
     }
@@ -240,6 +245,12 @@ public class PlayerController : Character
         {
             ChangeAnim("fall");
             isJumping = false;
+            isFalling = true;
+        }
+        else if(isGround && rb.linearVelocity.y < 0.1f)
+        {
+            isJumping = false;
+            isFalling = false;
         }
         // Apply jump force only if a jump was requested and the player is on the ground
         if (jumpRequested && isGround)
@@ -269,7 +280,7 @@ public class PlayerController : Character
         if(Mathf.Abs(horizontalInput) > 0.1f)
         {
             //Stop anim run interupt jumping animation
-            if (!isJumping )
+            if (!isJumping && !isFalling) 
             {
                 ChangeAnim("run");
             }
@@ -285,7 +296,7 @@ public class PlayerController : Character
         {
             //Stop anim idle interupt jumping animation
         
-            if (!isJumping)
+            if (!isJumping && !isFalling)
             {
                 ChangeAnim("idle");
             }
