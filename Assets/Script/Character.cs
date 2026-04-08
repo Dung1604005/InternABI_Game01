@@ -7,11 +7,7 @@ public class Character : MonoBehaviour
 {
     [SerializeField] private Animator animator;
 
-    public Animator Anim => animator;
-
     [SerializeField] protected HealthBar healthBar;
-
-    public HealthBar HealthBar => healthBar;
 
     [SerializeField] protected CombatText combatTextPrefab;
     protected string currentAnimName;
@@ -24,6 +20,12 @@ public class Character : MonoBehaviour
     protected float currentDamage;
 
     public bool IsDead => currentHp <=0;
+    #region GETTER
+
+    public Animator Anim => animator;
+
+    public HealthBar HealthBar => healthBar;
+    #endregion
 
     protected virtual void Awake()
     {

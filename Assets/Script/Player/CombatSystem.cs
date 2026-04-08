@@ -8,23 +8,16 @@ public class CombatSystem : MonoBehaviour
 
     [SerializeField] private bool isAttacking;
 
-    public bool IsAttacking => isAttacking;
-
     [Header("Attack Melee")]
 
     // damage of this attack = damageScale * atk of player
     [SerializeField] private float damageScaleMelee;
 
     [SerializeField] private bool canCombo;
-
-    // This para control if player can combo next attack
-    private bool isCombo;
-
     
     // player have to unlock combo with card Upgrade
     [SerializeField] private bool unlockedCombo;
 
-    private float timerAttackMelee;
 
     [SerializeField] private float cooldownAttackMelee;
 
@@ -33,8 +26,6 @@ public class CombatSystem : MonoBehaviour
     [Header("Throw Kunai")]
 
     [SerializeField] private float damageScaleKunai;
-
-    private float timerAttackKunai;
 
     [SerializeField] private float cooldownAttackKunai;
 
@@ -47,20 +38,18 @@ public class CombatSystem : MonoBehaviour
 
     [SerializeField] private float intervalThrow;
 
+    private float timerAttackMelee;
 
+    private float timerAttackKunai;
 
+    // This para control if player can combo next attack
+    private bool isCombo;
 
-    void Update()
-    {
-        if (isAttacking)
-        {
-            // Prevent attack when attacking
-            return;
-        }
-        timerAttackMelee += Time.deltaTime;
+    #region GETTER
 
-        timerAttackKunai += Time.deltaTime;
-    }
+    public bool IsAttacking => isAttacking;
+
+    #endregion
 
     /// <summary>
     /// This function check if player can attack melee ?
@@ -228,6 +217,18 @@ public class CombatSystem : MonoBehaviour
         unlockedCombo = true;
         attackArea.gameObject.SetActive(false);
 
+    }
+
+    void Update()
+    {
+        if (isAttacking)
+        {
+            // Prevent attack when attacking
+            return;
+        }
+        timerAttackMelee += Time.deltaTime;
+
+        timerAttackKunai += Time.deltaTime;
     }
 
 

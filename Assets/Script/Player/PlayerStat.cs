@@ -4,31 +4,35 @@ public class PlayerStat : MonoBehaviour
 {
     [SerializeField] private float damage;
 
-    public float Damage => damage;
-
     [SerializeField] private float maxHealth;
 
-    public float MaxHealth => maxHealth;
-
     [SerializeField] private int shields;
-
-    public int Shields => shields;
 
     // cool down reduction
     [SerializeField] private float cdr;
 
-    public float Cdr => cdr;
-
     // Max cool down reduction
     [SerializeField] private float maxCdr;
 
-    public float MaxCdr => maxCdr;
-
     [SerializeField] private float speedMove;
 
-    public float SpeedMove => speedMove;
-
     private PlayerController playerController;
+    #region GETTER
+
+    public float Damage => damage;
+
+    public float MaxHealth => maxHealth;
+
+    public int Shields => shields;
+
+    public float Cdr => cdr;
+
+    public float MaxCdr => maxCdr;
+
+    public float SpeedMove => speedMove;
+    #endregion
+
+
 
 
 

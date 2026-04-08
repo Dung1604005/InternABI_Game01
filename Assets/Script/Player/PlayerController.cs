@@ -17,8 +17,6 @@ public class PlayerController : Character
 
     [SerializeField] private CombatSystem combatSystem;
 
-    public CombatSystem CombatSystem => combatSystem;
-
 
     [Header("Stat Player")]
     //Store current shield player have
@@ -28,8 +26,6 @@ public class PlayerController : Character
     [SerializeField] private float jumpForce;
 
     [SerializeField] private PlayerStat playerStat;
-
-    public PlayerStat PlayerStat => playerStat;
 
     private bool isGround;
 
@@ -46,18 +42,75 @@ public class PlayerController : Character
 
     private float horizontalInput;
 
-    
-
     private Vector3 savePoint;
+
+    #region GETTER
+
+    public CombatSystem CombatSystem => combatSystem;
+
+    public PlayerStat PlayerStat => playerStat;
+    #endregion
     
 
-    protected override void Awake()
+    /// <summary>
+    /// This function store current position of player <see langword="into"/> savePoint 
+    /// </summary>
+    public void SavePoint()
+    {
+        savePoint = transform.position;
+    }
+    #region Update Stat
+
+     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="healAmount"></param>
+
+    public void OnHeal(float healAmount)
+    {
+        // if character is not dead then update health
+        if (!IsDead)
+        {
+            // Dont let health of character over maxHp
+            currentHp = Mathf.Min(playerStat.MaxHealth, currentHp + healAmount);
+            //Update current hp for healthbarUI
+            healthBar.SetNewHp(currentHp);
+        
+        }
+    }
+
+    public override void OnHit(float damage)
+    {
+        // If player have shield, use shield to prevent damage;
+        if(currentShields > 0)
+        {
+            // Update UI shield to display
+            
+            currentShields -= 1;
+            UIManager.Instance.SetShield(currentShields);
+            return;// Stop to not get hit
+        }
+        base.OnHit(damage);
+    }
+    public void UpdateDamage(float newDamage)
+    {
+        currentDamage = newDamage;
+    }
+    public void RestoreShields()
+    {
+        // Update UI shield to display
+        
+        currentShields = playerStat.Shields;
+        UIManager.Instance.SetShield(currentShields);
+    }
+    #endregion
+     protected override void Awake()
     {
         playerStat = GetComponent<PlayerStat>();
         OnInit();
     }
 
-    
+    #region Init and Despawn
 
     protected override void OnInit()
     {
@@ -102,57 +155,7 @@ public class PlayerController : Character
         base.OnDeath();
         rb.linearVelocity = Vector2.zero;
     }
-
-    /// <summary>
-    /// This function store current position of player <see langword="into"/> savePoint 
-    /// </summary>
-    public void SavePoint()
-    {
-        savePoint = transform.position;
-    }
-
-     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="healAmount"></param>
-
-    public void OnHeal(float healAmount)
-    {
-        // if character is not dead then update health
-        if (!IsDead)
-        {
-            // Dont let health of character over maxHp
-            currentHp = Mathf.Min(playerStat.MaxHealth, currentHp + healAmount);
-            //Update current hp for healthbarUI
-            healthBar.SetNewHp(currentHp);
-        
-        }
-    }
-
-    public override void OnHit(float damage)
-    {
-        // If player have shield, use shield to prevent damage;
-        if(currentShields > 0)
-        {
-            // Update UI shield to display
-            
-            currentShields -= 1;
-            UIManager.Instance.SetShield(currentShields);
-            return;// Stop to not get hit
-        }
-        base.OnHit(damage);
-    }
-    public void UpdateDamage(float newDamage)
-    {
-        currentDamage = newDamage;
-    }
-    public void RestoreShields()
-    {
-        // Update UI shield to display
-        
-        currentShields = playerStat.Shields;
-        UIManager.Instance.SetShield(currentShields);
-    }
+    #endregion
 
     
     void Start()
@@ -226,6 +229,7 @@ public class PlayerController : Character
 
         
     }
+    #region Move and Jump
     /// <summary>
     /// Handle the logic Jump and fall
     /// </summary>
@@ -305,6 +309,7 @@ public class PlayerController : Character
             rb.linearVelocity = Vector2.zero;
         }
     }
+    #endregion
 
     /// <summary>
     /// This function check <see langword="if"/>  player <see langword="is"/> stay <see langword="on"/> the ground by Raycast
