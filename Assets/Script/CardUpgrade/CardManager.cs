@@ -6,6 +6,17 @@ public class CardManager : MonoBehaviour
     [SerializeField] private List<UpgradeCard> upgradeCardList;
 
     [SerializeField] private List<CardUpgrade> cardUpgradeList;
+    private EventBinding<OnLevelChanged> levelChangedBinding;
+
+    public void OnEnable()
+    {
+        EventBus<OnLevelChanged>.Register(levelChangedBinding);
+    }
+    public void OnDisable()
+    {
+        EventBus<OnLevelChanged>.DeRegister(levelChangedBinding);
+    }
+
 
     [ContextMenu("Random new card")]
     public void OnInit()
@@ -52,6 +63,12 @@ public class CardManager : MonoBehaviour
             
         }
     }
+    void Awake()
+    {
+        levelChangedBinding = new EventBinding<OnLevelChanged>(OnInit);
+    }
+
+
 
     void Start()
     {

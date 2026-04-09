@@ -40,6 +40,8 @@ public class Character : MonoBehaviour
         maxHp = 100f;
         currentHp = maxHp;
         healthBar.OnInit(currentHp, this.transform);
+        healthBar.gameObject.SetActive(true);
+        gameObject.SetActive(true);
     }
 
 

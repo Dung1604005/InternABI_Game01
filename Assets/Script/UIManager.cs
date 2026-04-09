@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,28 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI shieldText;
 
+    [SerializeField] private TextMeshProUGUI levelText;
+
+    [SerializeField] private TextMeshProUGUI killedEnemyText;
+
+    [SerializeField] private TextMeshProUGUI totalEnemyText;
+
+    private EventBinding<OnLevelChanged> levelChangeBinding;
+
+   
+
+    public void OnEnable()
+    {
+        EventBus<OnLevelChanged>.Register(levelChangeBinding);
+        
+    }
+
+    public void OnDisable()
+    {
+        EventBus<OnLevelChanged>.DeRegister(levelChangeBinding);
+        
+    }
+
     public void SetCoin(int coint)
     {
         coinText.text = coint.ToString();
@@ -33,4 +56,12 @@ public class UIManager : MonoBehaviour
         //Update text
         shieldText.text = "x" +  shield.ToString();
     }
+
+    public void SetInformationLevel(OnLevelChanged onLevelChanged)
+    {
+        levelText.text = "Level: "+ onLevelChanged.level.ToString();
+        
+    }
+
+    
 }

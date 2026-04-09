@@ -18,6 +18,14 @@ public class Enemy : Character
     public Character Target => target;
 
     private bool isRight = true;
+
+    private EventBinding<OnLevelChanged> levelChangedBinding;
+
+    protected override void Awake()
+    {
+        levelChangedBinding = new EventBinding<OnLevelChanged>(OnInit);
+        base.Awake();
+    }
     protected override void OnInit()
     {
         base.OnInit();
@@ -29,15 +37,28 @@ public class Enemy : Character
     {
         
         base.OnDeSpawn();
-        Destroy(healthBar.gameObject);
-        Destroy(gameObject);
+        healthBar.gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     protected override void OnDeath()
     {
         ChangeState(null);
         rb.linearVelocity = Vector2.zero;
+        EventBus<OnEnemyKilled>.Raise(new OnEnemyKilled
+        {
+            amount = 1
+        });
         base.OnDeath();
+    }
+
+    public void OnEnable()
+    {
+        EventBus<OnLevelChanged>.Register(levelChangedBinding);
+    }
+    public void OnDisable()
+    {
+        EventBus<OnLevelChanged>.DeRegister(levelChangedBinding);
     }
 
     public void Attack()
