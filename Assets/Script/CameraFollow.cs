@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
@@ -16,7 +17,7 @@ public class CameraFollow : MonoBehaviour
         // Find the first target with class PlayerController
         target = FindFirstObjectByType<PlayerController>().transform;
     }
-
+    
     // Update is called once per frame
     void FixedUpdate()
     {

@@ -222,10 +222,7 @@ public class PlayerController : Character
                 combatSystem.ExecuteThrowKunai();
             }
         }
-        Debug.Log("IsGround: " + isGround);
-        Debug.Log("IsFalling: " + isFalling);
-        Debug.Log("IsJumping: " + isJumping);
-        Debug.Log(rb.linearVelocityY);
+       
 
         
     }

@@ -9682,7 +9682,6 @@ GameObject:
   - component: {fileID: 587471368}
   - component: {fileID: 587471370}
   - component: {fileID: 587471369}
-  - component: {fileID: 587471371}
   - component: {fileID: 587471372}
   m_Layer: 0
   m_Name: PlayerVisual
@@ -9787,18 +9786,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &587471371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 587471367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9167ff43485ea24daa4adac64103588, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventHandler
 --- !u!114 &587471372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14562,11 +14549,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3335892856243032159, guid: 9c6bd8b2a965c0544a9e4bf440df3b2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 23.27
+      value: 22.77
       objectReference: {fileID: 0}
     - target: {fileID: 3335892856243032159, guid: 9c6bd8b2a965c0544a9e4bf440df3b2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.56
+      value: 1.24
       objectReference: {fileID: 0}
     - target: {fileID: 3335892856243032159, guid: 9c6bd8b2a965c0544a9e4bf440df3b2c, type: 3}
       propertyPath: m_LocalPosition.z
