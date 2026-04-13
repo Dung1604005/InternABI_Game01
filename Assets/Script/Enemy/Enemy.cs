@@ -29,13 +29,18 @@ public class Enemy : Character
     protected override void OnInit()
     {
         base.OnInit();
+        healthBar.gameObject.SetActive(true);
         ChangeState(new IdleState());
         DeActiveAttack();
     }
 
     protected override void OnDeSpawn()
     {
-        
+        // If player dont die then skip this
+        if (!IsDead)
+        {
+            return;
+        }
         base.OnDeSpawn();
         healthBar.gameObject.SetActive(false);
         gameObject.SetActive(true);

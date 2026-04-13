@@ -37,6 +37,7 @@ public class Character : MonoBehaviour
     /// </summary>
     protected virtual void OnInit()
     {
+        ChangeAnim("idle");
         maxHp = 100f;
         currentHp = maxHp;
         healthBar.OnInit(currentHp, this.transform);

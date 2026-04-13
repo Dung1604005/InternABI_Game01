@@ -31,7 +31,8 @@ public class HealthBar : MonoBehaviour
     }
     public void SetNewMaxHp(float maxHp)
     {
-        this.maxHp = hp;
+        this.maxHp = maxHp;
+        imageFill.fillAmount = hp/maxHp;
     }
 
     void Update()

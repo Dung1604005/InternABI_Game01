@@ -70,10 +70,11 @@ public class UpgradeCard : MonoBehaviour
 
     public void ActiveCard()
     {
+       
         
-        cardButton.interactable = true;
         // Active this object and its child
         this.gameObject.SetActive(true);
+        cardButton.interactable = true;
         foreach(Transform child in transform)
         {
             child.gameObject.SetActive(true);

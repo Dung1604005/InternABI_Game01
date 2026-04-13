@@ -21,6 +21,7 @@ public class CardManager : MonoBehaviour
     [ContextMenu("Random new card")]
     public void OnInit()
     {
+        
         foreach(UpgradeCard upgradeCard in upgradeCardList)
         {
             upgradeCard.ActiveCard();

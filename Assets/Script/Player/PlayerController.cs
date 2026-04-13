@@ -75,6 +75,7 @@ public class PlayerController : Character
             currentHp = Mathf.Min(playerStat.MaxHealth, currentHp + healAmount);
             //Update current hp for healthbarUI
             healthBar.SetNewHp(currentHp);
+            
         
         }
     }
@@ -163,6 +164,7 @@ public class PlayerController : Character
         coin = PlayerPrefs.GetInt("coin", 0);
 
     }
+    #region Input handling
 
     //Handle physics logic inside FixedUpdate to sync with Unity's physics system
     void FixedUpdate()
@@ -193,39 +195,40 @@ public class PlayerController : Character
             return;
         }
         // value is in range -1 to 1
-        horizontalInput = Input.GetAxisRaw("Horizontal");
+        //horizontalInput = Input.GetAxisRaw("Horizontal");
 
         // If player click Space and the player is on the ground
         // => Send signal for FixedUpdate handle logic jump
-        if(Input.GetKeyDown(KeyCode.Space) && isGround && !isJumping)
-        {
-            jumpRequested = true;
-        }
+        // if(Input.GetKeyDown(KeyCode.Space) && isGround && !isJumping)
+        // {
+        //     jumpRequested = true;
+        // }
         
-        // Attack
-        if(Input.GetKeyDown(KeyCode.Mouse0) && isGround)
-        {
-            if (combatSystem.CanAttackMelee())
-            {
-                rb.linearVelocity = Vector2.zero;
-                combatSystem.ExecuteAttackMelee();
-            }
+        // // Attack
+        // if(Input.GetKeyDown(KeyCode.Mouse0) && isGround)
+        // {
+        //     if (combatSystem.CanAttackMelee())
+        //     {
+        //         rb.linearVelocity = Vector2.zero;
+        //         combatSystem.ExecuteAttackMelee();
+        //     }
             
-        }
+        // }
 
         //Throw
-        if(Input.GetKeyDown(KeyCode.C) && isGround)
-        {
-            if (combatSystem.CanAttackKunai())
-            {
-                rb.linearVelocity = Vector2.zero;
-                combatSystem.ExecuteThrowKunai();
-            }
-        }
+        // if(Input.GetKeyDown(KeyCode.C) && isGround)
+        // {
+        //     if (combatSystem.CanAttackKunai())
+        //     {
+        //         rb.linearVelocity = Vector2.zero;
+        //         combatSystem.ExecuteThrowKunai();
+        //     }
+        // }
        
 
         
     }
+    #endregion
     #region Move and Jump
     /// <summary>
     /// Handle the logic Jump and fall
@@ -308,6 +311,8 @@ public class PlayerController : Character
     }
     #endregion
 
+    #region Collision handling
+
     /// <summary>
     /// This function check <see langword="if"/>  player <see langword="is"/> stay <see langword="on"/> the ground by Raycast
     /// </summary>
@@ -352,5 +357,53 @@ public class PlayerController : Character
 
         }
     }
+
+    #endregion
+
+    #region Button control
+
+    public void SetMove(float horizontal)
+    {
+        horizontalInput = horizontal;
+    }
+
+    public void SetAttackMelee()
+    {
+        //If player on the ground then swing sword and make player cant move while attacking
+        if(isGround)
+        {
+            if (combatSystem.CanAttackMelee())
+            {
+                rb.linearVelocity = Vector2.zero;
+                combatSystem.ExecuteAttackMelee();
+            }
+            
+        }
+    }
+
+    public void SetThrowKunai()
+    {
+        //Throw
+        if( isGround)
+        {
+            if (combatSystem.CanAttackKunai())
+            {
+                rb.linearVelocity = Vector2.zero;
+                combatSystem.ExecuteThrowKunai();
+            }
+        }
+    }
+
+    public void SetJump()
+    {
+        if( isGround && !isJumping)
+        {
+            jumpRequested = true;
+        }
+    }
+
+
+
+    #endregion
 }
 

@@ -59,8 +59,13 @@ public class UIManager : MonoBehaviour
 
     public void SetInformationLevel(OnLevelChanged onLevelChanged)
     {
+        Debug.Log("SET NEW LEVEL");
         levelText.text = "Level: "+ onLevelChanged.level.ToString();
         
+    }
+    void Awake()
+    {
+        levelChangeBinding = new EventBinding<OnLevelChanged>(SetInformationLevel);
     }
 
     

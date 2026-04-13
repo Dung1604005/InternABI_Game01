@@ -35,11 +35,12 @@ public class LevelManager : MonoBehaviour
     public void LevelUp()
     {
         currentLevel += 1;
-        totalEnemyInLevel = 5;
+        totalEnemyInLevel = 1;
         enemyKilledInLevel = 0;
 
         EventBus<OnLevelChanged>.Raise(new OnLevelChanged
         {
+            
            level = currentLevel,
            totalEnemy = totalEnemyInLevel 
         });
@@ -57,6 +58,7 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         enemyKilledBinding = new EventBinding<OnEnemyKilled>(UpdateEnemyKilled);
+        
     }
 
 
